@@ -31,7 +31,8 @@ const spam = document.querySelectorAll('.promo__adv img'),
       genre = promo.querySelector('.promo__genre'),
       films = document.querySelector('.promo__interactive-list'),
       remove = document.querySelector('.add'),
-      imput = remove.querySelector('.adding__input');
+      imput = remove.querySelector('.adding__input'),
+      checkbox = imput.nextElementSibling.nextElementSibling;
       
 
 spam.forEach( (e) => {
@@ -44,17 +45,24 @@ promo.style.backgroundImage = 'url("img/bg.jpg")';
 
 remove.addEventListener ('submit',(e) => {
     e.preventDefault();
-    const newFilm = imput.value;
-    movieDB.movies.push(newFilm);
-    
-    cal();
-    imput.value = ""; 
+    let newFilm = imput.value;
+
+    if(newFilm) {
+        if (newFilm.length > 21){
+            newFilm = `${newFilm.substr(0,22)}...`;
+        }
+        movieDB.movies.push(newFilm);
+        movieDB.movies.sort();
+        cal();
+        imput.value = "";
+    }
+
+     
 });
 
 function cal () {
     films.innerHTML = "";
     movieDB.movies.forEach( (film, i) => {
-        movieDB.movies.sort();
         films.innerHTML += `
          <li class="promo__interactive-item">${i+1}.${film}
                         <div class="delete"></div>
@@ -64,3 +72,12 @@ function cal () {
     
 }
 cal(1);
+ 
+checkbox.addEventListener('click', (e)=>{
+    e = checkbox.checked;
+    if (e == true){
+        console.log('Добавляем любимый фильм');
+    }
+});
+
+
