@@ -39,7 +39,7 @@ window.addEventListener('DOMContentLoaded', () => {
 
     //Timer
 
-    const deadline = '2022-02-21';
+    const deadline = '2022-02-22';
 
     function getTimeRemaining(endtime) {
         const t  = Date.parse(endtime) - Date.parse(new Date()),
@@ -86,11 +86,62 @@ window.addEventListener('DOMContentLoaded', () => {
 
             if (t.total <= 0) {
                 clearInterval(timeInterval);
+                days.innerHTML = 0;
+                hours.innerHTML = 0;
+                minutes.innerHTML = 0;
+                seconds.innerHTML = 0;
             }
         }      
     }    
 
     setClock('.timer', deadline);
+
+    // Modal
+
+    const openModal = document.querySelectorAll('[data-modal]'),
+          closesModal = document.querySelector('[data-closes]'),
+          elemtsModal = document.querySelector('.modal');
+     
+    function openModals() {
+        elemtsModal.classList.add('show');
+            elemtsModal.classList.remove('hide');
+            document.body.style.overflow = 'hidden';
+            clearInterval(modalTimet);
+    }
+    
+    function closeModal() {
+            elemtsModal.classList.add('hide');
+            elemtsModal.classList.remove('show');
+            document.body.style.overflow = '';
+    }
+
+    openModal.forEach( e => {
+        e.addEventListener('click', openModals);
+    });
+
+    closesModal.addEventListener('click', closeModal);
+
+    elemtsModal.addEventListener('click', (e) => {
+        if (e.target === elemtsModal){
+            closeModal();
+        }  
+    });
+
+    document.addEventListener('keydown', (e) => {
+        if(e.key === 'Escape' && elemtsModal.classList.contains('show')){
+            closeModal();
+        }
+    });
+
+    const modalTimet = setTimeout(openModals, 15000);
+
+    function callModalEnd () {
+        if(window.pageYOffset + document.documentElement.clientHeight >= document.documentElement.scrollHeight) {
+            openModals();
+            window.removeEventListener('scroll', callModalEnd);
+        }
+    }
+    window.addEventListener('scroll', callModalEnd);
 });
 
 
